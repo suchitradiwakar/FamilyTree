@@ -1,0 +1,8 @@
+ADD_CHILD Asva Vani Female
+ADD_CHILD Chitra Aria Female
+GET_RELATIONSHIP Aria Siblings
+GET_RELATIONSHIP Lavnya Maternal-Aunt
+GET_RELATIONSHIP Atya Sister-In-Law
+GET_RELATIONSHIP Krpi Sister-In-Law
+GET_RELATIONSHIP Amba Brother-In-Law
+GET_RELATIONSHIP Satya Son

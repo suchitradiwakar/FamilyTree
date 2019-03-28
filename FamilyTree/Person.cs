@@ -29,7 +29,7 @@ namespace FamilyTree
             Relationship momchild = ListOfRelations.Find(r => r.secondperson.Name == Name && r.relationtype == "Child");
             if (momchild == null)
             {
-                Console.WriteLine("NONE");
+                //Console.WriteLine("NONE");
                 return null;
             }
             return momchild.firstperson;
@@ -43,7 +43,7 @@ namespace FamilyTree
                         && r.relationtype == "Spouse");
             if (spouse == null)
             {
-                Console.WriteLine("NONE");
+                //Console.WriteLine("NONE");
                 return null;
             }
             if (spouse.firstperson == mother)
@@ -58,18 +58,15 @@ namespace FamilyTree
             List<Relationship> children = ListOfRelations.FindAll(r => r.firstperson == mother && r.relationtype == "Child");
             int index = 0;
             List<String> siblings = new List<String>();
-            //Console.WriteLine(person.Name + "'s siblings are - ");
             while (index < children.Count())
             {
                 if (children[index].secondperson.Name != Name)
                 {
                     if (gender == null)
                         siblings.Add(children[index].secondperson.Name);
-                    //Console.WriteLine(children[index].secondperson.Name);
                     else
                         if (children[index].secondperson.Gender == gender)
                         siblings.Add(children[index].secondperson.Name);
-                    //Console.WriteLine(children[index].secondperson.Name);
                 }
                 index++;
             }
@@ -125,7 +122,7 @@ namespace FamilyTree
 
         public List<String> Children(String gender)
         {
-            //Person mother;
+
             String motherName;
             if (Gender == "Male")
             {

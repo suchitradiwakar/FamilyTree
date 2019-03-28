@@ -19,9 +19,7 @@ namespace FamilyTree
                 DisplayMembers();
                 AddRelation(FamilyMembers[0], FamilyMembers[1], "Spouse");
 
-                StreamReader sr = new StreamReader("C:\\RDMS\\Geo DSS-Demand\\Test Driven Development\\FamilyTree\\FamilyTree\\InputFile.txt");
-                ReadFile(sr);
-                sr.Close();
+                
 
                 StreamReader sw = new StreamReader("C:\\RDMS\\Geo DSS-Demand\\Test Driven Development\\FamilyTree\\FamilyTree\\SampleTest.txt");
                 ReadFile(sw);
@@ -78,15 +76,21 @@ namespace FamilyTree
         }
         public static void CreateListOfPeople()
         {
-            
-            AddMember(new Person("King Shan", "Male"));
-            AddMember(new Person("Queen Anga", "Female"));
+            Person king = new Person("King Shan", "Male", ListOfRelation);
+            Person queen = new Person("Queen Anga", "Female", ListOfRelation);
+            AddMember(king);
+            //AddMember(queen);
+            ADD_SPOUSE("King Shan", "Queen Anga", "Female");
 
             ADD_CHILD("Queen Anga", "Chit", "Male");
             ADD_CHILD("Queen Anga", "Ish", "Male");
             ADD_CHILD("Queen Anga", "Vich", "Male");
             ADD_CHILD("Queen Anga", "Aras", "Male");
             ADD_CHILD("Queen Anga", "Satya", "Female");
+
+            StreamReader sr = new StreamReader("C:\\RDMS\\Geo DSS-Demand\\Test Driven Development\\FamilyTree\\FamilyTree\\InputFile.txt");
+            ReadFile(sr);
+            sr.Close();
         }
 
         public static void AddMember(Person person)
@@ -123,13 +127,14 @@ namespace FamilyTree
             }
             else
             {
-                Person child = new Person(childName, gender);
+                Person child = new Person(childName, gender, ListOfRelation);
                 if (!FamilyMembers.Contains(child))
                 {
                     AddMember(child);
                 }
 
                 AddRelation(mother, child, "Child");
+                Console.WriteLine("CHILD_ADDITION_SUCCEEDED");
             }
         }
 
@@ -142,7 +147,7 @@ namespace FamilyTree
                 return;
             }
 
-            Person newspouse = new Person(spouse2, gender);
+            Person newspouse = new Person(spouse2, gender, ListOfRelation);
             if(!FamilyMembers.Contains(newspouse))
             {
                 AddMember(newspouse);
@@ -150,125 +155,125 @@ namespace FamilyTree
             }
         }
 
-        public static Person FindMother(Person child)
-        {
-            Relationship momchild = ListOfRelation.Find(r => r.secondperson.Name == child.Name && r.relationtype == "Child");
-            if(momchild == null)
-            {
-                Console.WriteLine("NONE");
-                return null;                
-            }
-            return momchild.firstperson;
-        }
+        //public static Person FindMother(Person child)
+        //{
+        //    Relationship momchild = ListOfRelation.Find(r => r.secondperson.Name == child.Name && r.relationtype == "Child");
+        //    if(momchild == null)
+        //    {
+        //        Console.WriteLine("NONE");
+        //        return null;                
+        //    }
+        //    return momchild.firstperson;
+        //}
 
-        public static Person FindFather(Person child)
-        {
-            Person mother = FindMother(child);
-            Relationship spouse = ListOfRelation.Find(
-                    r => (r.secondperson.Name == mother.Name || r.firstperson.Name == mother.Name)
-                        && r.relationtype == "Spouse");
-            if(spouse == null)
-            {
-                Console.WriteLine("NONE");
-                return null;
-            }
-            if (spouse.firstperson == mother)
-                return spouse.secondperson;
-            else
-                return spouse.firstperson;
-        }
+        //public static Person FindFather(Person child)
+        //{
+        //    Person mother = FindMother(child);
+        //    Relationship spouse = ListOfRelation.Find(
+        //            r => (r.secondperson.Name == mother.Name || r.firstperson.Name == mother.Name)
+        //                && r.relationtype == "Spouse");
+        //    if(spouse == null)
+        //    {
+        //        Console.WriteLine("NONE");
+        //        return null;
+        //    }
+        //    if (spouse.firstperson == mother)
+        //        return spouse.secondperson;
+        //    else
+        //        return spouse.firstperson;
+        //}
 
-        public static List<String> FindSibling(Person person, String gender)
-        {
-            Person mother = FindMother(person);
-            List<Relationship> children = ListOfRelation.FindAll(r => r.firstperson == mother && r.relationtype == "Child");
-            int index = 0;
-            List<String> siblings = new List<String>();
-            //Console.WriteLine(person.Name + "'s siblings are - ");
-            while (index < children.Count())
-            {
-                if (children[index].secondperson.Name != person.Name)
-                {
-                    if (gender == null)
-                        siblings.Add(children[index].secondperson.Name);
-                    //Console.WriteLine(children[index].secondperson.Name);
-                    else
-                        if (children[index].secondperson.Gender == gender)
-                            siblings.Add(children[index].secondperson.Name);
-                            //Console.WriteLine(children[index].secondperson.Name);
-                }
-                index++;
-            }
-            return siblings;           
-        } 
+        //public static List<String> FindSibling(Person person, String gender)
+        //{
+        //    Person mother = FindMother(person);
+        //    List<Relationship> children = ListOfRelation.FindAll(r => r.firstperson == mother && r.relationtype == "Child");
+        //    int index = 0;
+        //    List<String> siblings = new List<String>();
+        //    //Console.WriteLine(person.Name + "'s siblings are - ");
+        //    while (index < children.Count())
+        //    {
+        //        if (children[index].secondperson.Name != person.Name)
+        //        {
+        //            if (gender == null)
+        //                siblings.Add(children[index].secondperson.Name);
+        //            //Console.WriteLine(children[index].secondperson.Name);
+        //            else
+        //                if (children[index].secondperson.Gender == gender)
+        //                    siblings.Add(children[index].secondperson.Name);
+        //                    //Console.WriteLine(children[index].secondperson.Name);
+        //        }
+        //        index++;
+        //    }
+        //    return siblings;           
+        //} 
 
-        public static Person FindSpouse(Person person)
-        {
-            Person spouse;
-            Relationship husbwife = ListOfRelation.Find(r => (r.firstperson == person || r.secondperson == person) && r.relationtype == "Spouse");
-            if(husbwife==null)
-            {               
-                return null;
-            }
-            if (husbwife.firstperson == person)
-            {
-                spouse = husbwife.secondperson;
-            }
-            else
-            {
-                spouse = husbwife.firstperson;
-            }
-            return spouse;
-        }
+        //public static Person FindSpouse(Person person)
+        //{
+        //    Person spouse;
+        //    Relationship husbwife = ListOfRelation.Find(r => (r.firstperson == person || r.secondperson == person) && r.relationtype == "Spouse");
+        //    if(husbwife==null)
+        //    {               
+        //        return null;
+        //    }
+        //    if (husbwife.firstperson == person)
+        //    {
+        //        spouse = husbwife.secondperson;
+        //    }
+        //    else
+        //    {
+        //        spouse = husbwife.firstperson;
+        //    }
+        //    return spouse;
+        //}
 
-        public static List<String> FindMaternalAunt(Person person)
-        {           
-            Person mother = FindMother(person);
-            List<String> siblings = FindSibling(mother, "Female");
-            return siblings;
-        }
+        //public static List<String> FindMaternalAunt(Person person)
+        //{           
+        //    Person mother = FindMother(person);
+        //    List<String> siblings = FindSibling(mother, "Female");
+        //    return siblings;
+        //}
 
-        public static List<String> FindPaternalUncle(Person person)
-        {
-            Person father = FindFather(person);
-            List<String> uncles = FindSibling(father, "Male");
-            return uncles;
-        }
+        //public static List<String> FindPaternalUncle(Person person)
+        //{
+        //    Person father = FindFather(person);
+        //    List<String> uncles = FindSibling(father, "Male");
+        //    return uncles;
+        //}
 
-        public static List<String> FindMaternalUncle(Person person)
-        {
-            Person mother = FindMother(person);
-            List<String> uncles = FindSibling(mother, "Male");
-            return uncles;
-        }
+        //public static List<String> FindMaternalUncle(Person person)
+        //{
+        //    Person mother = FindMother(person);
+        //    List<String> uncles = FindSibling(mother, "Male");
+        //    return uncles;
+        //}
 
-        public static List<String> FindPaternalAunt(Person person)
-        {
-            Person father = FindFather(person);
-            List<String> aunts = FindSibling(father, "Female");
-            return aunts;
-        }
+        //public static List<String> FindPaternalAunt(Person person)
+        //{
+        //    Person father = FindFather(person);
+        //    List<String> aunts = FindSibling(father, "Female");
+        //    return aunts;
+        //}
 
-        public static List<String> FindChildren(Person person, String gender)
-        {
-            Person mother;
-            if(person.Gender == "Male")
-            {
-                mother = FindSpouse(person);
-            }
-            else
-            {
-                mother = person;
-            }
-            List<String> childrenNames = new List<String>();
-            List<Relationship> children = ListOfRelation.FindAll(r => r.firstperson == mother && r.relationtype == "Child");
-            foreach(Relationship child in children)
-            {
-                if(child.secondperson.Gender == gender)
-                    childrenNames.Add(child.secondperson.Name);
-            }
-            return childrenNames;
-        }
+        //public static List<String> FindChildren(Person person, String gender)
+        //{
+        //    Person mother;
+        //    if(person.Gender == "Male")
+        //    {
+        //        mother = FindSpouse(person);
+        //    }
+        //    else
+        //    {
+        //        mother = person;
+        //    }
+        //    List<String> childrenNames = new List<String>();
+        //    List<Relationship> children = ListOfRelation.FindAll(r => r.firstperson == mother && r.relationtype == "Child");
+        //    foreach(Relationship child in children)
+        //    {
+        //        if(child.secondperson.Gender == gender)
+        //            childrenNames.Add(child.secondperson.Name);
+        //    }
+        //    return childrenNames;
+        //}
         public static void GetRelationship(String Name, String relationType)
         {
             Person person = FamilyMembers.Find(r => r.Name == Name);
@@ -283,7 +288,7 @@ namespace FamilyTree
                 case "Siblings":
                 case "Sibling":
                     {
-                        List<String> siblings = FindSibling(person, null);
+                        List<String> siblings = person.Sibling(null);
                         if (siblings == null)
                         {
                             Console.WriteLine("NONE");
@@ -300,7 +305,7 @@ namespace FamilyTree
                     }
                 case "Maternal-Aunt":
                     {
-                        List<String> aunts = FindMaternalAunt(person);
+                        List<String> aunts = person.MaternalAunt();
                         if (aunts == null)
                         {
                             Console.WriteLine("NONE");
@@ -318,7 +323,7 @@ namespace FamilyTree
                     }
                 case "Paternal-Uncle":
                     {
-                        List<String> uncles = FindPaternalUncle(person);
+                        List<String> uncles = person.PaternalUncle();
                         if (uncles == null)
                         {
                             Console.WriteLine("NONE");
@@ -335,7 +340,7 @@ namespace FamilyTree
                     }
                 case "Maternal-Uncle":
                     {
-                        List<String> uncles = FindMaternalUncle(person);
+                        List<String> uncles = person.MaternalUncle();
                         if (uncles == null)
                         {
                             Console.WriteLine("NONE");
@@ -352,7 +357,7 @@ namespace FamilyTree
                     }
                 case "Paternal-Aunt":
                     {
-                        List<String> aunts = FindPaternalAunt(person);
+                        List<String> aunts = person.PaternalAunt();
                         if (aunts == null)
                         {
                             Console.WriteLine("NONE");
@@ -369,19 +374,19 @@ namespace FamilyTree
                     }
                 case "Sister-In-Law":
                     {
-                        Person spouse = FindSpouse(person);
+                        Person spouse = person.Spouse();
                         List<String> sil = new List<String>();
                         if (spouse != null)
                         {
-                            sil = FindSibling(spouse, "Female");
+                            sil = spouse.Sibling("Female");
                         }            
                          
 
-                        List<String> brothers = FindSibling(person, "Male");
+                        List<String> brothers = person.Sibling("Male");
                         foreach (String brother in brothers)
                         {
                             Person bro = FamilyMembers.Find(r => r.Name == brother);
-                            Person wife = FindSpouse(bro);
+                            Person wife = bro.Spouse();
                             sil.Add(wife.Name);
                         }
 
@@ -396,18 +401,18 @@ namespace FamilyTree
                     }
                 case "Brother-In-Law":
                     {
-                        Person spouse = FindSpouse(person);
+                        Person spouse = person.Spouse();
                         List<String> bil = new List<String>();
                         if (spouse != null)
                         {
-                            bil = FindSibling(spouse, "Male");
+                            bil = spouse.Sibling("Male");
                         }
 
-                        List<String> sisters = FindSibling(person, "Female");
+                        List<String> sisters = person.Sibling("Female");
                         foreach (String sister in sisters)
                         {
                             Person sis = FamilyMembers.Find(r => r.Name == sister);
-                            Person husband = FindSpouse(sis);
+                            Person husband = sis.Spouse();
                             bil.Add(husband.Name);
                         }
 
@@ -422,7 +427,7 @@ namespace FamilyTree
                     }
                 case "Son":
                     {
-                        List<String> sons = FindChildren(person, "Male");
+                        List<String> sons = person.Children("Male");
                         if (sons == null)
                         {
                             Console.WriteLine("NONE");
@@ -439,7 +444,7 @@ namespace FamilyTree
                     }
                 case "Daughter":
                     {
-                        List<String> daughters = FindChildren(person, "Female");
+                        List<String> daughters = person.Children("Female");
                         if (daughters == null)
                         {
                             Console.WriteLine("NONE");

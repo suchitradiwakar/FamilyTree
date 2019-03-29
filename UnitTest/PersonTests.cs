@@ -10,14 +10,6 @@ namespace UnitTest
     {
         public List<Relationship> ListOfRelations = new List<Relationship>();
         
-        //AddMember(new Person("King Shan", "Male", ListOfRelation));
-        //AddMember(new Person("Queen Anga", "Female", ListOfRelation));
-
-        //ADD_CHILD("Queen Anga", "Chit", "Male");
-        //ADD_CHILD("Queen Anga", "Ish", "Male");
-        //ADD_CHILD("Queen Anga", "Vich", "Male");
-        //ADD_CHILD("Queen Anga", "Aras", "Male");
-        //ADD_CHILD("Queen Anga", "Satya", "Female");
         [TestMethod]
         public void AddMalePerson()
         {
